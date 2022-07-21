@@ -110,6 +110,71 @@ example(of: "Custom Subscriber") {
 	publisher.subscribe(subscriber)
 }
 
+/* Commenting to not affect other function's output
+example(of: "Future") {
+	func futureIncrement(integer: Int, afterDelay delay: TimeInterval) -> Future<Int, Never> {
+		Future<Int, Never> { promise in
+			print("Original")
+			DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+				promise(.success(integer + 1))
+			}
+		}
+	}
+	
+	let future = futureIncrement(integer: 1, afterDelay: 3)
+	future
+		.sink(
+			receiveCompletion: {
+				print("First completion", $0)
+			},
+			receiveValue: {
+				print("First value", $0)
+			}
+		)
+		.store(in: &subscriptions)
+	future
+		.sink(
+			receiveCompletion: {
+				print("Second completion", $0)
+			},
+			receiveValue: {
+				print("Second value", $0)
+			}
+		)
+		.store(in: &subscriptions)
+}
+
+example(of: "Future2") {
+	let future = Future<Int, Never> { promise in
+		print("Original")
+		DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+			promise(.success(2022))
+		}
+	}
+	
+	future
+		.sink(
+			receiveCompletion: {
+				print("First completion", $0)
+			},
+			receiveValue: {
+				print("First value", $0)
+			}
+		)
+		.store(in: &subscriptions)
+	future
+		.sink(
+			receiveCompletion: {
+				print("Second completion", $0)
+			},
+			receiveValue: {
+				print("Second value", $0)
+			}
+		)
+		.store(in: &subscriptions)
+}
+*/
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
