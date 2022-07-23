@@ -175,6 +175,75 @@ example(of: "Future2") {
 }
 */
 
+example(of: "PassthroughSubject") {
+	enum MyError: Error {
+		case test
+	}
+
+	final class StringSubscriber: Subscriber {
+		typealias Input = String
+		typealias Failure = MyError
+		
+		func receive(subscription: Subscription) {
+			subscription.request(.max(2))
+		}
+		func receive(_ input: String) -> Subscribers.Demand {
+			print("Received value", input)
+			return input == "World" ? .max(1) : .none
+		}
+		func receive(completion: Subscribers.Completion<MyError>) {
+			print("Received completion", completion)
+		}
+	}
+
+	let subscriber = StringSubscriber()
+	let subject = PassthroughSubject<String, MyError>()
+
+	subject.subscribe(subscriber)
+
+	let subscription = subject
+		.sink(
+			receiveCompletion: { completion in
+				print("Received completion (sink)", completion)
+			},
+			receiveValue: { value in
+				print("Received value (sink)", value)
+			}
+		)
+
+	subject.send("Hello")
+	subject.send("World")
+
+	subscription.cancel()
+	subject.send("Still there?")
+
+	subject.send(completion: .failure(MyError.test))
+	subject.send(completion: .finished)
+	subject.send("How about another one?")
+}
+
+example(of: "CurrentValueSubject") {
+	var subscriptions = Set<AnyCancellable>()
+	
+	let subject = CurrentValueSubject<Int, Never>(0)
+	
+	subject
+		.print()
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+
+	subject.send(1)
+	subject.send(2)
+	print(subject.value)
+	subject.value = 3
+	print(subject.value)
+
+	subject
+		.print()
+		.sink(receiveValue: { print("Second subscription:", $0) })
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
