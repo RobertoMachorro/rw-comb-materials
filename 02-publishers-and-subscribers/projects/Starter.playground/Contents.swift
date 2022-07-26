@@ -1,6 +1,6 @@
 import Foundation
 import Combine
-//import _Concurrency
+import _Concurrency
 
 var subscriptions = Set<AnyCancellable>()
 
@@ -242,6 +242,79 @@ example(of: "CurrentValueSubject") {
 		.print()
 		.sink(receiveValue: { print("Second subscription:", $0) })
 		.store(in: &subscriptions)
+}
+
+example(of: "Dynamically adjusting Demand") {
+	final class IntSubscriber: Subscriber {
+		typealias Input = Int
+		typealias Failure = Never
+
+		func receive(subscription: Subscription) {
+			subscription.request(.max(2))
+		}
+		
+		func receive(_ input: Int) -> Subscribers.Demand {
+			print("Received value", input)
+			
+			switch input {
+			case 1:
+				return .max(2) // 1
+			case 3:
+				return .max(1) // 2
+			default:
+				return .none // 3
+			}
+		}
+		
+		func receive(completion: Subscribers.Completion<Never>) {
+			print("Received completion", completion)
+		}
+	}
+	
+	let subscriber = IntSubscriber()
+	
+	/*
+	let subject = PassthroughSubject<Int, Never>()
+	
+	subject.subscribe(subscriber)
+	
+	subject.send(1)
+	subject.send(2)
+	subject.send(3)
+	subject.send(4)
+	subject.send(5)
+	subject.send(6)
+	*/
+	
+	[1,2,3,4,5,6].publisher.subscribe(subscriber)
+}
+
+example(of: "Type erasure") {
+	let subject = PassthroughSubject<Int, Never>()
+	let publisher = subject.eraseToAnyPublisher()
+
+	publisher
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+
+	subject.send(0)
+}
+
+example(of: "async/await") {
+	let subject = CurrentValueSubject<Int, Never>(0)
+	
+	Task {
+		for await element in subject.values {
+			print("Element: \(element)")
+		}
+		print("Completed.")
+	}
+	
+	subject.send(1)
+	subject.send(2)
+	subject.send(3)
+	
+	subject.send(completion: .finished)
 }
 
 /// Copyright (c) 2021 Razeware LLC
