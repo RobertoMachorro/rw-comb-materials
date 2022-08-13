@@ -71,6 +71,15 @@ example(of: "flatMap") {
 	
 }
 
+example(of: "replaceNil") {
+	["A", nil, "C"].publisher
+		.eraseToAnyPublisher()
+		//.compactMap({ $0 })
+		.replaceNil(with: "-")
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
