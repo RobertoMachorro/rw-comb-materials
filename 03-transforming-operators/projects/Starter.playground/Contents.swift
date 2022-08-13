@@ -3,7 +3,15 @@ import Combine
 
 var subscriptions = Set<AnyCancellable>()
 
-<#Add your code here#>
+example(of: "collect") {
+	["A", "B", "C", "D", "E"].publisher
+		//.collect()
+		.collect(2)
+		.sink(receiveCompletion: { print($0) },
+			  receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 
 /// Copyright (c) 2021 Razeware LLC
 ///
