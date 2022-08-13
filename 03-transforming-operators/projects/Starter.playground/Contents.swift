@@ -12,6 +12,34 @@ example(of: "collect") {
 		.store(in: &subscriptions)
 }
 
+example(of: "map") {
+	let formatter = NumberFormatter()
+	formatter.numberStyle = .spellOut
+
+	[123, 4, 56].publisher
+		.map {
+			formatter.string(for: NSNumber(integerLiteral: $0)) ?? ""
+		}
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
+example(of: "mapping key paths") {
+	let publisher = PassthroughSubject<Coordinate, Never>()
+	
+	publisher
+		.map(\.x, \.y)
+		.sink(receiveValue: { x, y in
+			print(
+				"The coordinate at (\(x), \(y)) is in quadrant",
+				quadrantOf(x: x, y: y)
+			)
+		})
+		.store(in: &subscriptions)
+
+	publisher.send(Coordinate(x: 10, y: -8))
+	publisher.send(Coordinate(x: 0, y: 5))
+}
 
 /// Copyright (c) 2021 Razeware LLC
 ///
