@@ -41,6 +41,14 @@ example(of: "mapping key paths") {
 	publisher.send(Coordinate(x: 0, y: 5))
 }
 
+example(of: "tryMap") {
+	Just("Directory name that does not exist")
+		.tryMap { try FileManager.default.contentsOfDirectory(atPath: $0) }
+		.sink(receiveCompletion: { print($0) },
+			  receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
