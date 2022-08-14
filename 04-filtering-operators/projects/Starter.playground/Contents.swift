@@ -84,6 +84,14 @@ example(of: "last(where:) never-ending") {
 	numbers.send(completion: .finished)
 }
 
+example(of: "dropFirst") {
+	let numbers = (1...10).publisher
+	numbers
+		.dropFirst(6) // without parameter it equals 1
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
