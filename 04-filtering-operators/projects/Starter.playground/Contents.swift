@@ -51,6 +51,7 @@ example(of: "ignoreOutput") {
 example(of: "first(where:)") {
 	let numbers = (1...9).publisher
 	numbers
+		.print("numbers")
 		.first(where: { $0 % 2 == 0 })
 		.sink(receiveCompletion: { print("Completed with: \($0)") },
 			  receiveValue: { print($0) })
