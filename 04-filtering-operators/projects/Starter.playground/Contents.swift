@@ -23,6 +23,16 @@ example(of: "removeDuplicates") {
 		.store(in: &subscriptions)
 }
 
+example(of: "compactMap") {
+	let strings = ["a", "1.24", "3", "def", "45", "0.23"].publisher
+	strings
+		.compactMap { Float($0) }
+		.sink(receiveValue: {
+			print($0)
+		})
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
