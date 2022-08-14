@@ -81,6 +81,7 @@ example(of: "last(where:) never-ending") {
 	numbers.send(3)
 	numbers.send(4)
 	numbers.send(5)
+	numbers.send(completion: .finished)
 }
 
 /// Copyright (c) 2021 Razeware LLC
