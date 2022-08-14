@@ -3,7 +3,17 @@ import Combine
 
 var subscriptions = Set<AnyCancellable>()
 
-<#Add your code here#>
+example(of: "filter") {
+	let numbers = (1...10000).publisher
+	numbers
+		.filter { $0.isMultiple(of: 3) }
+		.sink(receiveValue: { n in
+			print("\(n) is a multiple of 3!")
+		})
+		.store(in: &subscriptions)
+}
+
+
 
 /// Copyright (c) 2021 Razeware LLC
 ///
