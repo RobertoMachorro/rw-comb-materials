@@ -100,6 +100,22 @@ example(of: "drop(while:)") {
 		.store(in: &subscriptions)
 }
 
+example(of: "drop(untilOutputFrom:)") {
+	let isReady = PassthroughSubject<Void, Never>()
+	let taps = PassthroughSubject<Int, Never>()
+	taps
+		.drop(untilOutputFrom: isReady)
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+	(1...5).forEach { n in
+		taps.send(n)
+		
+		if n == 3 {
+			isReady.send()
+		}
+	}
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
