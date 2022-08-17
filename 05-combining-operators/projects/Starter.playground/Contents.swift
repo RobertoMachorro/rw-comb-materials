@@ -12,6 +12,15 @@ example(of: "prepend(Output...)") {
 		.store(in: &subscriptions)
 }
 
+example(of: "prepend(Sequence)") {
+	let publisher = [5, 6, 7].publisher
+	publisher
+		.prepend([3, 4])
+		.prepend(Set(1...2))
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 
 // Copyright (c) 2021 Razeware LLC
 //
