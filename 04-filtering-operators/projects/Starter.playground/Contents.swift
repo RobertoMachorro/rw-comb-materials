@@ -125,6 +125,15 @@ example(of: "prefix") {
 		.store(in: &subscriptions)
 }
 
+example(of: "prefix(while:)") {
+	let numbers = (1...10).publisher
+	numbers
+		.prefix(while: { $0 < 5 })
+		.sink(receiveCompletion: { print("Completed with: \($0)") },
+			  receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 /// Copyright (c) 2021 Razeware LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
