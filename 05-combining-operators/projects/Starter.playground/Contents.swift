@@ -22,6 +22,15 @@ example(of: "prepend(Sequence)") {
 		.store(in: &subscriptions)
 }
 
+example(of: "prepend(Publisher)") {
+	let publisher1 = [3, 4].publisher
+	let publisher2 = [1, 2].publisher
+	publisher1
+		.prepend(publisher2)
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 // Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
