@@ -17,10 +17,10 @@ example(of: "prepend(Sequence)") {
 	publisher
 		.prepend([3, 4])
 		.prepend(Set(1...2))
+		.prepend(stride(from: 6, to: 11, by: 2))
 		.sink(receiveValue: { print($0) })
 		.store(in: &subscriptions)
 }
-
 
 // Copyright (c) 2021 Razeware LLC
 //
