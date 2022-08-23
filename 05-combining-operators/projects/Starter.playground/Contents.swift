@@ -122,6 +122,7 @@ example(of: "switchToLatest") {
 	publishers.send(completion: .finished)
 }
 
+/* async code that would messup other code
 example(of: "switchToLatest - Network Request") {
 	let url = URL(string: "https://source.unsplash.com/random")!
 
@@ -151,6 +152,7 @@ example(of: "switchToLatest - Network Request") {
 		taps.send()
 	}
 }
+*/
 
 // Copyright (c) 2021 Razeware LLC
 //
