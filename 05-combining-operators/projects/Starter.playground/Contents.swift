@@ -54,6 +54,19 @@ example(of: "append(Output...)") {
 		.store(in: &subscriptions)
 }
 
+example(of: "append(Output...) #2") {
+	let publisher = PassthroughSubject<Int, Never>()
+	publisher
+		.append(3, 4)
+		.append(5)
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+
+	publisher.send(1)
+	publisher.send(2)
+	publisher.send(completion: .finished) // Required to finish
+}
+
 // Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
