@@ -67,6 +67,17 @@ example(of: "append(Output...) #2") {
 	publisher.send(completion: .finished) // Required to finish
 }
 
+example(of: "append(Sequence)") {
+	let publisher = [1, 2, 3].publisher
+	
+	publisher
+		.append([4, 5]) // 2
+		.append(Set([6, 7])) // 3
+		.append(stride(from: 8, to: 11, by: 2)) // 4
+		.sink(receiveValue: { print($0) })
+		.store(in: &subscriptions)
+}
+
 // Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
